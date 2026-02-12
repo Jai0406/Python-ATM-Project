@@ -1,86 +1,93 @@
-# -*- coding: utf-8 -*-
+class ATM:
 
-
-***OOP - object, class, abstraction, inheritence, encapsulation, polymorphism***
-"""
-
-class Atm:
     def __init__(self):
-        self.pin = None
         self.balance = 0
-        self.menu()
+        self.Pin = None
 
     def menu(self):
         while True:
-            choice = input("""
-Hello, how would you like to proceed?
-1. Create PIN
-2. Deposit
-3. Withdraw
-4. Check Balance
-5. Exit
+            User_input = input("""
+Hi, How can I help you today?
+1. Press 1 to Create PIN
+2. Press 2 to Deposit
+3. Press 3 to Withdraw money
+4. Press 4 to check Balance
+5. Press 5 to exit
 """)
-            if choice == '1':
+
+            if User_input == "1":
                 self.create_pin()
-            elif choice == '2':
-                self.deposit_money()
-            elif choice == '3':
-                self.withdraw_money()
-            elif choice == '4':
+            elif User_input == "2":
+                self.deposit()
+            elif User_input == "3":
+                self.withdraw()
+            elif User_input == "4":
                 self.check_balance()
-            elif choice == '5':
-                print("Thank you for Choosing us. Goodbye!")
+            elif User_input == "5":
+                print("Thank you for Choosing us. Goodbye !")
                 break
             else:
-                print("Please select a valid option.")
+                print("Invalid Entry Please select from above")
 
     def create_pin(self):
         while True:
             try:
-                pin = int(input("Set your 4-digit PIN: "))
-                if 1000 <= pin <= 9999:
-                    self.pin = pin
-                    print("PIN set successfully!")
+                Pin = int(input("**** Set your 4 digit PIN **** "))
+                if 1000 <= Pin <= 9999:
+                    self.Pin = Pin
+                    print("Pin Created Successfully")
                     break
                 else:
-                    print("PIN must be 4 digits.")
+                    print("Kindly set the PIN in 4 digits")
             except ValueError:
-                print("Please enter numbers only.")
+                print("Only Numerics allowed")
 
     def validate_pin(self):
+      if self.Pin is None:
+          print("Please create PIN first.")
+          return False
+
+      attempts = 3
+      while attempts > 0:
+          try:
+              temp = int(input("Enter your PIN: "))
+
+              if temp == self.Pin:
+                  return True
+              else:
+                  attempts -= 1
+                  print(f"Incorrect PIN  Attempts left: {attempts}")
+
+          except ValueError:
+              print("Invalid Input, Enter numbers only")
+
+      print("Too many incorrect attempts. Returning to main menu.")
+      return False
+
+    def deposit(self):
+      if self.validate_pin():
         try:
-            temp = int(input("Enter your PIN: "))
-            return temp == self.pin
+          amount = int(input("Please enter the amount"))
+          if amount > 0:
+            self.balance += amount
+            print(f"Amount deposited sucessfully ! Current balance --> {self.balance}")
+          else:
+            print("Amount must be positive")
         except ValueError:
-            print("Invalid input. Enter numbers only.")
-            return False
+          print("Enter a valid number.")
 
-    def deposit_money(self):
-        if self.validate_pin():
-            try:
-                amount = int(input("Enter the amount to deposit: "))
-                if amount > 0:
-                    self.balance += amount
-                    print(f"Amount deposited successfully! Current balance: {self.balance}")
-                else:
-                    print("Amount must be positive.")
-            except ValueError:
-                print("Enter a valid number.")
-
-    def withdraw_money(self):
-        if self.validate_pin():
-            try:
-                amount = int(input("Enter the amount to withdraw: "))
-                if amount <= self.balance:
-                    self.balance -= amount
-                    print(f"Withdrawal successful! Remaining balance: {self.balance}")
-                else:
-                    print("Insufficient funds.")
-            except ValueError:
-                print("Enter a valid number.")
+    def withdraw(self):
+      if self.validate_pin():
+        try:
+          amount = int(input("Enter the amount to be withdrawn --> "))
+          if amount <= self.balance:
+            self.balance -= amount
+            print(f"Amount of {amount} deducted remaining balance {self.balance}")
+          else:
+            print("Insufficient Funds !!")
+        except ValueError:
+          print("Enter a Valid number")
 
     def check_balance(self):
-        if self.validate_pin():
-            print(f"Your account balance is: {self.balance}")
-
-sbi = Atm()
+      if self.validate_pin():
+        print(f"Your account balance is {self.balance}")
